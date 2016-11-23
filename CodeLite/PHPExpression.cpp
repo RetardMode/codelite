@@ -280,6 +280,12 @@ PHPEntityBase::Ptr_t PHPExpression::Resolve(PHPLookupTable& lookpTable, const wx
                 if(currentToken->Is(kEntityTypeFunction)) {
                     // return the function return value
                     actualType = currentToken->Cast<PHPEntityFunction>()->GetReturnValue();
+                    
+                    if((actualType == "self" || actualType == "\\self") && parentToken) {
+                        // Resolve self to the actual class name
+                        actualType = parentToken->GetFullName();
+                    }
+                    
                 } else if(currentToken->Is(kEntityTypeVariable)) {
                     // return the type hint
                     actualType = currentToken->Cast<PHPEntityVariable>()->GetTypeHint();
